@@ -5,7 +5,7 @@ import { execFile } from 'child_process';
 import { promisify } from 'util';
 
 const execFileAsync = promisify(execFile);
-export const runtime = 'node';
+export const runtime = 'nodejs';
 
 const uploadsDir = path.join(process.cwd(), 'uploads');
 const outputDir = path.join(process.cwd(), 'output');
