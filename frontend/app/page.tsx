@@ -42,14 +42,16 @@ export default function HomePage() {
     const formData = new FormData();
     formData.append('image', file);
 
+    const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL ?? 'http://localhost:5000';
+
     try {
-      const response = await fetch('/api/remove', {
+      const response = await fetch(`${BACKEND_URL}/remove`, {
         method: 'POST',
         body: formData
       });
 
       if (!response.ok) {
-        const payload = await response.json();
+        const payload = await response.json().catch(() => null);
         throw new Error(payload?.error ?? 'Unexpected processing error.');
       }
 

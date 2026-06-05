@@ -1,57 +1,85 @@
 # Remove BG System
 
-A modern background-removal app with a Next.js frontend and a Python backend bridge using `rembg`.
+This repository is now split into two separate projects so the frontend and backend can be hosted independently.
+
+## Structure
+
+- `frontend/` — Next.js web UI
+- `backend/` — Python Flask background-removal API
 
 ## Setup
 
-### 1. Python backend
+### Backend
 
-Create and activate a Python virtual environment:
+1. Change into the backend folder:
+
+```powershell
+cd backend
+```
+
+2. Create and activate a Python virtual environment:
 
 ```powershell
 python -m venv venv
 .\venv\Scripts\Activate
 ```
 
-Install Python dependencies:
+3. Install Python dependencies:
 
 ```powershell
 pip install -r requirements.txt
 ```
 
-If you receive an ONNX or backend error, install the CPU backend explicitly:
+4. Start the backend API:
 
 ```powershell
-pip install "rembg[cpu]"
+python app.py
 ```
 
-### 2. Node frontend
+The backend listens on `http://localhost:5000` by default.
 
-Install Node dependencies:
+### Frontend
+
+1. Change into the frontend folder:
+
+```powershell
+cd frontend
+```
+
+2. Install Node dependencies:
 
 ```powershell
 npm install
 ```
 
-Start the Next.js app:
+3. Start the Next.js app:
 
 ```powershell
 npm run dev
 ```
 
-Open the UI at `http://127.0.0.1:3000`.
+4. Open the UI at `http://127.0.0.1:3000`.
+
+### Optional backend URL override
+
+If the backend is hosted somewhere else, configure `NEXT_PUBLIC_BACKEND_URL` in `frontend/.env.local`:
+
+```env
+NEXT_PUBLIC_BACKEND_URL=https://your-backend.example.com
+```
 
 ## How it works
 
-- The browser uploads an image to `app/api/remove/route.ts`
-- The server saves the file to `uploads/`
-- A Python script at `scripts/remove_bg.py` calls `rembg` to remove the background
-- The processed PNG is returned and downloaded automatically
+- The frontend uploads an image directly to the backend API at `/remove`
+- The backend uses `rembg` to remove the background
+- A transparent PNG is returned to the browser for download
 
-## Project structure
+## Project layout
 
-- `app/` — Next.js app and API route
-- `components/` — shadcn-style UI components
-- `scripts/remove_bg.py` — Python background-removal bridge
-- `requirements.txt` — Python dependencies for `rembg`
-- `package.json` — Next.js dependencies and scripts
+- `backend/app.py` — Flask API service
+- `backend/remove_bg.py` — command-line helper for background removal
+- `backend/requirements.txt` — Python dependencies
+- `frontend/package.json` — Next.js dependencies and scripts
+- `frontend/app/` — Next.js app routes and page components
+- `frontend/components/` — shared UI components
+- `frontend/lib/` — utility helpers
